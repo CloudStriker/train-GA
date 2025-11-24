@@ -1,0 +1,15 @@
+accelerate
+transformers
+datasets
+peft
+deepspeed
+vllm
+tensorboardX
+tqdm
+attrdict
+human_eval
+evalplus
+fraction
+bitsandbytes
+hf_transfer
+datasets
