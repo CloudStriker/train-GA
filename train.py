@@ -17,7 +17,7 @@ import gc
 import torch
 import transformers
 from transformers import Trainer
-from datasets import Dataset
+from datasets import Dataset, load_dataset
 import datasets
 import numpy as np
 from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training, PeftModel, LoraRuntimeConfig
@@ -239,7 +239,7 @@ def build_model(model_name, use_quantization=True, lora_rank=32):
 def main():    
     MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
     
-    DATA_PATH = "Terese_dataset_1+2+3+4+5+7+8+9+10.jsonl"
+    DATA_PATH = "ClickNoow/Terese-v11-Training-Dataset"
     
     OUTPUT_DIR = "Terese_v11/qwen25-rehearsal-sft"
     
@@ -288,7 +288,36 @@ def main():
     logger.info("✅ Model loaded")
     print(model)
 
-    raw_train_dataset = load_sft_dataset(DATA_PATH, max_examples=45000)
+    logger.info(f"📥 Downloading dataset from Hugging Face: {DATA_PATH}")
+    try:
+        raw_train_dataset = load_dataset(DATA_PATH, split="train")
+    except Exception as e:
+        logger.error(f"Failed load dataset: {e}")
+        return
+
+    column_names = raw_train_dataset.column_names
+    logger.info(f"dataset: {column_names}")
+
+    mappings = {
+        "question": "instruction",
+        "input": "instruction", 
+        "response": "output",
+        "answer": "output"
+    }
+    
+    for old_name, new_name in mappings.items():
+        if old_name in column_names and new_name not in column_names:
+            logger.info(f"Renaming column '{old_name}' to '{new_name}'")
+            raw_train_dataset = raw_train_dataset.rename_column(old_name, new_name)
+
+    raw_train_dataset = raw_train_dataset.filter(
+        lambda x: x.get('instruction') is not None and x.get('output') is not None
+    )
+    
+    raw_train_dataset = raw_train_dataset.filter(
+        lambda x: len(str(x['instruction']) + str(x['output'])) < 8000
+    )
+
     raw_train_dataset = raw_train_dataset.shuffle(seed=42)
         
     train_dataset = raw_train_dataset.map(
