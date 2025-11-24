@@ -375,13 +375,11 @@ def main():
     trainer.train()
     trainer.save_state()
     
-    logger.info("💾 Merging and saving final model...")
-    model = model.merge_and_unload()
-    model.save_pretrained(OUTPUT_DIR)
-    tokenizer.save_pretrained(OUTPUT_DIR)
+    logger.info("💾 saving final model...")
+    trainer.save_model(OUTPUT_DIR)
     
-    logger.info("✅ Training completed!")
-    logger.info(f"📁 Model saved to: {OUTPUT_DIR}")
+    logger.info("✅ Training completed! Adapter saved.")
+    logger.info(f"📁 Adapter saved to: {OUTPUT_DIR}")
 
 if __name__ == "__main__":
     main()
