@@ -288,7 +288,7 @@ def main():
     logger.info("✅ Model loaded")
     print(model)
 
-    raw_train_dataset = load_sft_dataset(DATA_PATH, max_examples=35000)
+    raw_train_dataset = load_sft_dataset(DATA_PATH, max_examples=45000)
     raw_train_dataset = raw_train_dataset.shuffle(seed=42)
         
     train_dataset = raw_train_dataset.map(
