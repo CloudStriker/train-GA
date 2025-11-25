@@ -339,8 +339,8 @@ def main():
     training_args = transformers.TrainingArguments(
         output_dir=OUTPUT_DIR,
         num_train_epochs=3,
-        per_device_train_batch_size=32,
-        gradient_accumulation_steps=1,
+        per_device_train_batch_size=16,
+        gradient_accumulation_steps=2,
         save_strategy="steps",
         save_steps=100,
         save_total_limit=1,
