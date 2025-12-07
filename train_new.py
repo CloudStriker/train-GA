@@ -19,9 +19,9 @@ from huggingface_hub import HfApi
 
 # --- Configuration ---
 MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
-DATA_PATH = "ClickNoow/Terese-v12-Training-Dataset"
-REPO_ID = "ClickNoow/Terese-v12-adapter"
-OUTPUT_DIR = "Terese_v12/qwen25-rehearsal-sft"
+DATA_PATH = "ClickNoow/Terese-v13-Training-Dataset"
+REPO_ID = "ClickNoow/Terese-v13-adapter"
+OUTPUT_DIR = "Terese_v13/qwen25-rehearsal-sft"
 IGNORE_INDEX = -100
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
